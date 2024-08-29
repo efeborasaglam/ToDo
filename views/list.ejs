@@ -1,0 +1,81 @@
+<%- include("header") -%>
+
+
+
+<center>
+    <h1 style="color: white;">Today</h1> 
+</center>           
+
+<form class="item" action="/" method="post">
+    <input type="text" name="n" placeholder="new Task">
+    <input type="text" name="description" placeholder="Description">
+    <hr>
+    <button id="b" type="submit" <span id="s2"></span>+</button> 
+</form>
+<div class="box">       
+    <div class="column"> <!-- Spalte für aktive Aufgaben -->
+        <h2 class="arimo">Aktive Aufgaben</h2>
+        <% for(var i=0;i<newListItem.length;i++) { %>
+            <% if (!newListItem[i].completed) { %> <!-- Nur nicht abgeschlossene Aufgaben anzeigen -->
+                <form action="/update" method="post">
+                    <div class="item" style="margin-left: 5px;">
+                        <input type="hidden" name="itemId" value="<%= newListItem[i]._id %>">
+                        <input type="text" name="updatedName" value="<%= newListItem[i].name %>">
+                        <input type="text" style="font-size: 14px;" name="updatedDescription" value="<%= newListItem[i].description %>">
+                        <input type="hidden" style="font-size: 14px;" name="completed" value="<%= newListItem[i].completed %>">
+                        <button class="update-button" type="submit">Aktualisieren</button>
+                    </div>
+                </form>
+                <form action="/update-status" method="post">
+                    <div class="item">
+                        <input type="hidden" name="itemId" value="<%= newListItem[i]._id %>">
+                        <input type="checkbox" name="completed" value="true" <%= newListItem[i].completed ? 'checked' : '' %> onchange="this.form.submit()">
+                        <p style="margin-left: 20px; color: greenyellow;">erledigt</p>
+                    </div>
+                </form>
+                <form action="/delete" method="post">
+                    <div class="item">
+                        <input type="hidden" name="checkbox" value="<%= newListItem[i]._id %>">
+                        <button style="background-color: red;"  type="submit">Löschen</button> <!-- Button zum Löschen hinzufügen -->
+                        <hr>
+                    </div>
+                    
+                </form>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+
+<div class="box">  
+    <div class="column"> <!-- Spalte für erledigte Aufgaben -->
+        <h2 class="arimo">Erledigte Aufgaben</h2>
+        <% for(var i=0;i<newListItem.length;i++) { %>
+            <% if (newListItem[i].completed) { %> <!-- Nur abgeschlossene Aufgaben anzeigen -->
+                <form action="/update-status" method="post"> <!-- Formular für das Zurücknehmen erledigter Aufgaben -->
+                    <div class="item">
+                        <input type="hidden" name="itemId" value="<%= newListItem[i]._id %>">
+                        <input type="checkbox" name="completed" value="false" onchange="this.form.submit()">
+                        <p style="margin-left: 20px; color: greenyellow;">zurückrufen</p>
+                        <p class="completed"><s><%= newListItem[i].name %></s></p> <!-- Stil für erledigte Aufgaben anpassen -->
+                        <p class="description"><s><%= newListItem[i].description %></s></p> <!-- Stil für Beschreibung anpassen -->
+                        <br>
+                    </div>
+                </form>
+                <form action="/delete" method="post"> <!-- Formular für das Löschen erledigter Aufgaben -->
+                    <div class="item">
+                        <input type="hidden" name="checkbox" value="<%= newListItem[i]._id %>">
+                        <button style="background-color: red;" type="submit">Löschen</button> <!-- Button zum Löschen hinzufügen -->
+                    </div>
+                </form>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
